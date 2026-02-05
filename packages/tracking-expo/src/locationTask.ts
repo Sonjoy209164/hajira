@@ -1,12 +1,12 @@
 import * as TaskManager from "expo-task-manager";
 import type { LocationObject } from "expo-location";
 
-import { enqueueTrackingPoint } from "./pointQueue";
+import { enqueueTrackingPoint } from "./pointQueue.js";
 
 // Legacy/experimental task kept for compatibility.
 export const LOCATION_TASK_NAME = "route-tracking-task-v1";
 
-TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
+TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }: any) => {
   if (error) {
     console.log("[TASK] error", error);
     return;
@@ -22,4 +22,3 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     console.log("[TASK] enqueue failed", e);
   }
 });
-

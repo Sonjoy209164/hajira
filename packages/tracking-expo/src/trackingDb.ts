@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { LocationObject } from "expo-location";
 import * as SQLite from "expo-sqlite";
 
-import { logD, logE, logI, logW } from "./logcat";
-import { STORAGE_ACTIVE_SHIFT_KEY } from "./trackingConstants";
+import { logD, logE, logI, logW } from "./logcat.js";
+import { STORAGE_ACTIVE_SHIFT_KEY } from "./trackingConstants.js";
 
 export type BreadcrumbPoint = {
   shiftId: string;
@@ -72,8 +72,8 @@ async function getFirstAsync<T = any>(sql: string, params: any[] = []): Promise<
   const db = await getDb();
   const stmt = await db.prepareAsync(sql);
   try {
-    const res = await stmt.executeAsync<T>(params);
-    return (await res.getFirstAsync()) ?? null;
+    const res: any = await stmt.executeAsync(params);
+    return ((await res.getFirstAsync()) ?? null) as T | null;
   } finally {
     await stmt.finalizeAsync();
   }
@@ -83,8 +83,8 @@ async function getAllAsync<T = any>(sql: string, params: any[] = []): Promise<T[
   const db = await getDb();
   const stmt = await db.prepareAsync(sql);
   try {
-    const res = await stmt.executeAsync<T>(params);
-    return (await res.getAllAsync()) ?? [];
+    const res: any = await stmt.executeAsync(params);
+    return ((await res.getAllAsync()) ?? []) as T[];
   } finally {
     await stmt.finalizeAsync();
   }
@@ -506,4 +506,3 @@ export async function insertPointFromLocation(shiftId: string, location: Locatio
 
   await insertBreadcrumbPoints([point]);
 }
-

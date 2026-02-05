@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { STORAGE_DEVICE_ID_KEY } from "./trackingConstants";
+import { STORAGE_DEVICE_ID_KEY } from "./trackingConstants.js";
 
 function createPseudoUuid() {
   const rand = Math.random().toString(16).slice(2);
@@ -15,4 +15,3 @@ export async function getOrCreateDeviceId(): Promise<string> {
   await AsyncStorage.setItem(STORAGE_DEVICE_ID_KEY, id);
   return id;
 }
-

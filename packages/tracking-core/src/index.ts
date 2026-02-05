@@ -17,8 +17,7 @@ export type {
   TrackingGetShiftPointsResponse,
   TrackingApiClient,
   TrackingFetchClientConfig,
-} from "./types";
+} from "./types.js";
 
-export { createTrackingFetchClient } from "./trackingFetchClient";
-export { getDefaultTrackingEnvConfig, type TrackingEnvConfig } from "./trackingEnv";
-
+export { createTrackingFetchClient } from "./trackingFetchClient.js";
+export { getDefaultTrackingEnvConfig, type TrackingEnvConfig } from "./trackingEnv.js";

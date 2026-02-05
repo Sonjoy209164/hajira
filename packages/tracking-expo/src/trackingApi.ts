@@ -10,12 +10,12 @@ import type {
   TrackingEndShiftResponse,
   TrackingUploadPointsBatchRequest,
   TrackingUploadPointsBatchResponse,
-} from "@hajira/tracking-core";
-import { createTrackingFetchClient, getDefaultTrackingEnvConfig } from "@hajira/tracking-core";
+} from "@hajiracm/tracking-core";
+import { createTrackingFetchClient, getDefaultTrackingEnvConfig } from "@hajiracm/tracking-core";
 
-import { logD, logE } from "./logcat";
+import { logD, logE } from "./logcat.js";
 
-export type { TrackingPoint, TrackingPointUpload, TrackingShiftSummary } from "@hajira/tracking-core";
+export type { TrackingPoint, TrackingPointUpload, TrackingShiftSummary } from "@hajiracm/tracking-core";
 
 let configuredClient: TrackingApiClient | null = null;
 let cachedEnvClient: TrackingApiClient | null = null;

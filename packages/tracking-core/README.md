@@ -1,4 +1,4 @@
-# @hajira/tracking-core
+# @hajiracm/tracking-core
 
 Core (platform-agnostic) building blocks for the Hajira **shift breadcrumb tracking** system:
 
@@ -9,13 +9,13 @@ Core (platform-agnostic) building blocks for the Hajira **shift breadcrumb track
 ## Install
 
 ```bash
-npm i @hajira/tracking-core
+npm i @hajiracm/tracking-core
 ```
 
 ## Usage (Next.js / Node 18+ / Expo)
 
 ```ts
-import { createTrackingFetchClient } from "@hajira/tracking-core";
+import { createTrackingFetchClient } from "@hajiracm/tracking-core";
 
 const api = createTrackingFetchClient({
   baseUrl: process.env.BE_HOST!,
@@ -24,8 +24,6 @@ const api = createTrackingFetchClient({
 
 const res = await api.listShifts({ employeeId: "123", limit: 50 });
 ```
-
-Note: this repo currently exports **TypeScript source** from the package. In Next.js you may need `transpilePackages`.
 
 ## Environment helper
 

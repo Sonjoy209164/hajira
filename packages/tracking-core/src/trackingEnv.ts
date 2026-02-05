@@ -3,9 +3,15 @@ export type TrackingEnvConfig = {
   apiKey?: string | null;
 };
 
+declare const process: any;
+
 function readEnvFirst(keys: string[]): string | null {
+  const env =
+    typeof process !== "undefined" && process?.env ? (process.env as any) : (globalThis as any)?.process?.env;
+  if (!env) return null;
+
   for (const key of keys) {
-    const v = (process.env as any)?.[key];
+    const v = env?.[key];
     if (typeof v === "string" && v.trim()) return v.trim();
   }
   return null;
@@ -31,4 +37,3 @@ export function getDefaultTrackingEnvConfig(): TrackingEnvConfig | null {
 
   return { baseUrl, apiKey };
 }
-

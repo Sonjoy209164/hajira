@@ -2,16 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
 
-import { logD, logE, logI, logW } from "./logcat";
+import { logD, logE, logI, logW } from "./logcat.js";
 import {
   MOCK_LOCATION_BLOCKED_MESSAGE,
   STORAGE_ACTIVE_SHIFT_KEY,
   STORAGE_LAST_BG_DELIVERY_AT_KEY,
   STORAGE_TRACKING_ISSUE_KEY,
   TRACKING_TASK_NAME,
-} from "./trackingConstants";
-import { initTrackingDb, insertBreadcrumbPoints } from "./trackingDb";
-import { flushQueuedPoints, pauseShiftTracking } from "./trackingService";
+} from "./trackingConstants.js";
+import { initTrackingDb, insertBreadcrumbPoints } from "./trackingDb.js";
+import { flushQueuedPoints, pauseShiftTracking } from "./trackingService.js";
 
 type ActiveShiftState = {
   shiftId: string;
@@ -44,7 +44,7 @@ async function loadActiveShift(): Promise<ActiveShiftState | null> {
 
 // IMPORTANT: defineTask must be imported at app startup (e.g., in _layout.tsx)
 // so Android can wake up the JS runtime for location updates.
-TaskManager.defineTask(TRACKING_TASK_NAME, async ({ data, error }) => {
+TaskManager.defineTask(TRACKING_TASK_NAME, async ({ data, error }: any) => {
   if (error) {
     console.warn("[TRACKING_TASK] error:", error);
     logE("TRACKING_TASK", "defineTask:error", error);
@@ -138,4 +138,3 @@ TaskManager.defineTask(TRACKING_TASK_NAME, async ({ data, error }) => {
     isFlushing = false;
   }
 });
-

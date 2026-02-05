@@ -11,7 +11,7 @@ import type {
   TrackingStartShiftResponse,
   TrackingUploadPointsBatchRequest,
   TrackingUploadPointsBatchResponse,
-} from "./types";
+} from "./types.js";
 
 function joinUrl(baseUrl: string, path: string) {
   const base = baseUrl.replace(/\/+$/, "");
@@ -116,4 +116,3 @@ export function createTrackingFetchClient(config: TrackingFetchClientConfig): Tr
       }),
   };
 }
-

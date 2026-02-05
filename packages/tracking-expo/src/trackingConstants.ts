@@ -23,5 +23,4 @@ export const STORAGE_TRACKING_ISSUE_KEY = "tracking.issue.v1";
 export const MOCK_LOCATION_BLOCKED_MESSAGE =
   "Mock location detected. Disable mock location (Developer options → Select mock location app → None) and try again.";
 
-export type { TrackingIssue, TrackingIssueType, TrackingMode } from "@hajira/tracking-core";
-
+export type { TrackingIssue, TrackingIssueType, TrackingMode } from "@hajiracm/tracking-core";

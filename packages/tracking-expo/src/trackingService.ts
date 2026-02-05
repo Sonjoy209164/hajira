@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import Constants from "expo-constants";
 import { Alert, Linking, PermissionsAndroid, Platform } from "react-native";
 
-import { logD, logE, logI, logW } from "./logcat";
+import { logD, logE, logI, logW } from "./logcat.js";
 import {
   DEFAULT_DISTANCE_INTERVAL_M,
   DEFAULT_TIME_INTERVAL_MS,
@@ -18,16 +18,16 @@ import {
   TRACKING_NOTIFICATION_TITLE,
   TRACKING_TASK_NAME,
   type TrackingIssue,
-} from "./trackingConstants";
+} from "./trackingConstants.js";
 import {
   ensureShiftState,
   getPendingBatch,
   incrementFailure,
   initTrackingDb,
   markAckedAndPrune,
-} from "./trackingDb";
-import { apiEndShift, apiStartShift, apiUploadBreadcrumbBatch } from "./trackingApi";
-import { getOrCreateDeviceId } from "./trackingDevice";
+} from "./trackingDb.js";
+import { apiEndShift, apiStartShift, apiUploadBreadcrumbBatch } from "./trackingApi.js";
+import { getOrCreateDeviceId } from "./trackingDevice.js";
 
 /**
  * Strategy notes:
@@ -358,7 +358,7 @@ async function startForegroundWatch(
       timeInterval: timeIntervalMs,
       distanceInterval: distanceIntervalM,
     },
-    async (location) => {
+    async (location: Location.LocationObject) => {
       if (Platform.OS === "android" && location?.mocked === true) {
         logW("TRACKING_SVC", "foreground: mock location detected; pausing shift", {
           shiftId,
