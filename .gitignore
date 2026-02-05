@@ -1,5 +1,12 @@
 node_modules/
 packages/*/dist/
+apps/*/node_modules/
+apps/*/.expo/
+apps/*/dist/
+apps/*/.cache/
+apps/*/.DS_Store
+apps/*/.env
+apps/jamai-api/data/
 *.tgz
 
 npm-debug.log*
