@@ -1,0 +1,34 @@
+export type TrackingEnvConfig = {
+  baseUrl: string;
+  apiKey?: string | null;
+};
+
+function readEnvFirst(keys: string[]): string | null {
+  for (const key of keys) {
+    const v = (process.env as any)?.[key];
+    if (typeof v === "string" && v.trim()) return v.trim();
+  }
+  return null;
+}
+
+export function getDefaultTrackingEnvConfig(): TrackingEnvConfig | null {
+  // Mobile (Expo) convention in this repo
+  const baseUrl = readEnvFirst([
+    "TRACKING_API_BASE_URL",
+    "EXPO_PUBLIC_API_BASE_URL",
+    // Next/admin-portal convention in this repo
+    "BE_HOST",
+    "NEXT_PUBLIC_BE_HOST",
+  ]);
+
+  if (!baseUrl) return null;
+
+  const apiKey = readEnvFirst([
+    "TRACKING_API_KEY",
+    "EXPO_PUBLIC_API_KEY",
+    "API_KEY",
+  ]);
+
+  return { baseUrl, apiKey };
+}
+
