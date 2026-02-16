@@ -80,3 +80,36 @@ npx expo start -c
 ```
 
 If you install this package via npm `"file:"` (symlink) in a monorepo, Metro may need a `metro.config.js` that adds your workspace `packages/` to `watchFolders` and resolves deps from the app’s `node_modules` (the demo generator writes this automatically).
+
+## Share / publish
+
+### Publish to npm
+
+From this repo:
+
+```bash
+cd packages/tracking-init
+npm version patch
+npm run build
+npm publish
+```
+
+If this is your first publish for a scoped package, you may need:
+
+```bash
+npm publish --access public
+```
+
+### Share as a tarball (no npm publish)
+
+```bash
+cd packages/tracking-init
+npm run build
+npm pack
+```
+
+This creates a `.tgz` you can send to someone. They can install it with:
+
+```bash
+npm i ./hajiracm-tracking-init-<version>.tgz
+```

@@ -16,6 +16,16 @@ npx expo start -c
 
 Then scan the QR with Expo Go (or run a Dev Build).
 
+## Build APK (EAS)
+
+```bash
+eas login
+eas build:configure -p android
+eas build -p android --profile preview --clear-cache
+```
+
+Note: This demo compiles the local workspace packages in `postinstall` (runs `npm run build:local-packages`) so EAS can bundle them.
+
 ## How it’s used (code)
 
 Side-effect import at startup (required so Android can deliver background updates):
@@ -72,4 +82,3 @@ This app installs the package via:
 - `@hajiracm/tracking-init`: `file:../../packages/tracking-init`
 
 When using local workspace packages like this, Metro needs `metro.config.js` (included) so it can watch and resolve symlinked packages.
-

@@ -8,6 +8,8 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATE_APP_TSX="$SCRIPT_DIR/templates/tracking-init-demo/App.tsx"
 TEMPLATE_METRO_CONFIG="$SCRIPT_DIR/templates/tracking-init-demo/metro.config.js"
 TEMPLATE_README="$SCRIPT_DIR/templates/tracking-init-demo/README.md"
+TEMPLATE_EAS_JSON="$SCRIPT_DIR/templates/tracking-init-demo/eas.json"
+TEMPLATE_BUILD_LOCAL_PACKAGES="$SCRIPT_DIR/templates/tracking-init-demo/scripts/build-local-packages.cjs"
 
 DEST="$REPO_ROOT/$DEST_REL"
 
@@ -21,6 +23,14 @@ if [[ ! -f "$TEMPLATE_METRO_CONFIG" ]]; then
 fi
 if [[ ! -f "$TEMPLATE_README" ]]; then
   echo "Missing template: $TEMPLATE_README" >&2
+  exit 1
+fi
+if [[ ! -f "$TEMPLATE_EAS_JSON" ]]; then
+  echo "Missing template: $TEMPLATE_EAS_JSON" >&2
+  exit 1
+fi
+if [[ ! -f "$TEMPLATE_BUILD_LOCAL_PACKAGES" ]]; then
+  echo "Missing template: $TEMPLATE_BUILD_LOCAL_PACKAGES" >&2
   exit 1
 fi
 
@@ -52,9 +62,26 @@ npx expo install @react-native-async-storage/async-storage @react-native-communi
 npm install "$REPO_ROOT/packages/tracking-init" "$REPO_ROOT/packages/tracking-core"
 
 echo "[4/4] Writing demo App.tsx + patching app.json permissions"
+echo "  - adding build scripts for local workspace packages"
+node -e '
+const fs = require("fs");
+const pkgPath = "package.json";
+const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+pkg.scripts = pkg.scripts || {};
+
+pkg.scripts["build:local-packages"] = "node ./scripts/build-local-packages.cjs";
+pkg.scripts.postinstall = "npm run build:local-packages";
+pkg.scripts["eas-build-post-install"] = "npm run build:local-packages";
+
+fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\\n");
+'
+
+mkdir -p "$DEST/scripts"
+cp "$TEMPLATE_BUILD_LOCAL_PACKAGES" "$DEST/scripts/build-local-packages.cjs"
 cp "$TEMPLATE_APP_TSX" "$DEST/App.tsx"
 cp "$TEMPLATE_METRO_CONFIG" "$DEST/metro.config.js"
 cp "$TEMPLATE_README" "$DEST/README.md"
+cp "$TEMPLATE_EAS_JSON" "$DEST/eas.json"
 
 node -e '
 const fs = require("fs");
@@ -63,8 +90,19 @@ const raw = fs.readFileSync(path, "utf8");
 const data = JSON.parse(raw);
 data.expo = data.expo || {};
 
+const slug = String(data.expo.slug || "trackinginitdemo")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "");
+const appId = `com.hajiracm.${slug || "trackinginitdemo"}`;
+
 // Android permissions for background tracking + FGS notification
 data.expo.android = data.expo.android || {};
+if (!data.expo.android.package) {
+  data.expo.android.package = appId;
+}
+if (typeof data.expo.android.versionCode !== "number") {
+  data.expo.android.versionCode = 1;
+}
 const perms = [
   "ACCESS_COARSE_LOCATION",
   "ACCESS_FINE_LOCATION",
@@ -78,6 +116,9 @@ data.expo.android.permissions = Array.from(new Set([...existingPerms, ...perms])
 
 // iOS permission strings + background mode
 data.expo.ios = data.expo.ios || {};
+if (!data.expo.ios.bundleIdentifier) {
+  data.expo.ios.bundleIdentifier = appId;
+}
 data.expo.ios.infoPlist = data.expo.ios.infoPlist || {};
 if (!data.expo.ios.infoPlist.NSLocationWhenInUseUsageDescription) {
   data.expo.ios.infoPlist.NSLocationWhenInUseUsageDescription =
