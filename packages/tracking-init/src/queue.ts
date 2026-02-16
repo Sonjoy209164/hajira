@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { TrackingPointUpload } from "@hajiracm/tracking-core";
 import type { LocationObject } from "expo-location";
 
+import { isTrackingInitDebugLoggingEnabled } from "./debug.js";
 import { STORAGE_ACTIVE_SESSION_KEY, STORAGE_QUEUE_KEY_PREFIX } from "./trackingConstants.js";
 
 export type QueuedTrackingPoint = TrackingPointUpload & {
@@ -70,6 +71,20 @@ export async function enqueueTrackingPoint(params: {
     bearingDeg: coords?.heading ?? null,
     isMock: Boolean((params.location as any)?.mocked),
   };
+
+  if (isTrackingInitDebugLoggingEnabled()) {
+    console.log("[TRACKING_INIT] point", {
+      sessionId: params.sessionId,
+      ts: point.ts,
+      latitude: point.latitude,
+      longitude: point.longitude,
+      accuracyM: point.accuracyM ?? null,
+      speedMps: point.speedMps ?? null,
+      bearingDeg: point.bearingDeg ?? null,
+      isMock: point.isMock,
+      queuedAt: point.queuedAt,
+    });
+  }
 
   const maxQueueSize = Math.max(10, Math.min(Number(params.maxQueueSize ?? 5000), 50_000));
 

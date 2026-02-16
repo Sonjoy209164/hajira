@@ -45,7 +45,15 @@ For iOS, set permission strings and enable background mode `location` (required 
 ## Usage
 
 ```ts
-import { startTracking, stopTracking, drainQueuedTrackingPoints } from "@hajiracm/tracking-init";
+import {
+  setTrackingInitDebugLogging,
+  startTracking,
+  stopTracking,
+  drainQueuedTrackingPoints,
+} from "@hajiracm/tracking-init";
+
+// Prints every collected point to the JS console:
+setTrackingInitDebugLogging(true);
 
 await startTracking({ sessionId: "shift_123" });
 
@@ -68,5 +76,7 @@ From this repo root, run:
 ```bash
 bash scripts/create-tracking-init-demo.sh
 cd examples/tracking-init-demo
-npx expo start
+npx expo start -c
 ```
+
+If you install this package via npm `"file:"` (symlink) in a monorepo, Metro may need a `metro.config.js` that adds your workspace `packages/` to `watchFolders` and resolves deps from the app’s `node_modules` (the demo generator writes this automatically).

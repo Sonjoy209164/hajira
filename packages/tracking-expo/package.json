@@ -26,6 +26,12 @@
   },
   "files": [
     "dist",
+    "logcat.js",
+    "logcat.d.ts",
+    "trackingTask.js",
+    "trackingTask.d.ts",
+    "locationTask.js",
+    "locationTask.d.ts",
     "README.md",
     "LICENSE"
   ],

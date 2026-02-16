@@ -18,6 +18,8 @@
   },
   "files": [
     "dist",
+    "trackingTask.js",
+    "trackingTask.d.ts",
     "README.md",
     "LICENSE"
   ],
@@ -44,4 +46,3 @@
     "typescript": "^5.8.3"
   }
 }
-

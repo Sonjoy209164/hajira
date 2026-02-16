@@ -6,11 +6,21 @@ DEST_REL="${1:-examples/tracking-init-demo}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TEMPLATE_APP_TSX="$SCRIPT_DIR/templates/tracking-init-demo/App.tsx"
+TEMPLATE_METRO_CONFIG="$SCRIPT_DIR/templates/tracking-init-demo/metro.config.js"
+TEMPLATE_README="$SCRIPT_DIR/templates/tracking-init-demo/README.md"
 
 DEST="$REPO_ROOT/$DEST_REL"
 
 if [[ ! -f "$TEMPLATE_APP_TSX" ]]; then
   echo "Missing template: $TEMPLATE_APP_TSX" >&2
+  exit 1
+fi
+if [[ ! -f "$TEMPLATE_METRO_CONFIG" ]]; then
+  echo "Missing template: $TEMPLATE_METRO_CONFIG" >&2
+  exit 1
+fi
+if [[ ! -f "$TEMPLATE_README" ]]; then
+  echo "Missing template: $TEMPLATE_README" >&2
   exit 1
 fi
 
@@ -43,6 +53,8 @@ npm install "$REPO_ROOT/packages/tracking-init" "$REPO_ROOT/packages/tracking-co
 
 echo "[4/4] Writing demo App.tsx + patching app.json permissions"
 cp "$TEMPLATE_APP_TSX" "$DEST/App.tsx"
+cp "$TEMPLATE_METRO_CONFIG" "$DEST/metro.config.js"
+cp "$TEMPLATE_README" "$DEST/README.md"
 
 node -e '
 const fs = require("fs");
@@ -100,4 +112,4 @@ echo ""
 echo "Done."
 echo "Run:"
 echo "  cd $DEST_REL"
-echo "  npx expo start"
+echo "  npx expo start -c"
