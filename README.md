@@ -2,10 +2,13 @@
 
 Consent-based location tracking for Expo/React Native apps, with a small, platform-agnostic TypeScript core.
 
-This repo contains two npm packages:
+This repo contains three npm packages:
 
 - `@hajiracm/tracking-core`: shared types + a tiny `fetch` API client
 - `@hajiracm/tracking-expo`: Expo/React Native implementation (permissions, background tasks, offline queue, upload)
+- `@hajiracm/tracking-init`: Expo/React Native “starter” that only initiates tracking + queues points in `AsyncStorage` (no SQLite / no upload)
+
+For a quick local demo app, run: `bash scripts/create-tracking-init-demo.sh`
 
 ## What It’s For (Use Cases)
 
@@ -52,9 +55,22 @@ npx expo install expo-location expo-task-manager expo-sqlite expo-constants
 npx expo install @react-native-async-storage/async-storage @react-native-community/netinfo
 ```
 
+Init-only (no upload / no SQLite):
+
+```bash
+npm i @hajiracm/tracking-init @hajiracm/tracking-core
+```
+
+`@hajiracm/tracking-init` requires these peer deps in your app:
+
+```bash
+npx expo install expo-location expo-task-manager expo-constants
+npx expo install @react-native-async-storage/async-storage @react-native-community/netinfo
+```
+
 ## Backend Requirement
 
-This SDK **uploads to your backend**. You must provide a `baseUrl` for API calls.
+`@hajiracm/tracking-expo` **uploads to your backend**. You must provide a `baseUrl` for API calls. (`@hajiracm/tracking-init` does not upload; it only queues points.)
 
 You can configure it using environment variables (simple) or in code (more flexible).
 
@@ -192,4 +208,3 @@ Request/response shapes are defined in `@hajiracm/tracking-core` types:
 ## License
 
 MIT
-

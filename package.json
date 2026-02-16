@@ -6,6 +6,6 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "npm -w packages/tracking-core run build && npm -w packages/tracking-expo run build"
+    "build": "npm -w packages/tracking-core run build && npm -w packages/tracking-expo run build && npm -w packages/tracking-init run build"
   }
 }

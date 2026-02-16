@@ -1,0 +1,47 @@
+{
+  "name": "@hajiracm/tracking-init",
+  "version": "0.1.0",
+  "description": "Expo/React Native tracking initiator (permissions + device id + foreground/background services) with an AsyncStorage queue (no SQLite)",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./trackingTask": {
+      "types": "./dist/trackingTask.d.ts",
+      "default": "./dist/trackingTask.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": "*",
+    "@react-native-community/netinfo": "*",
+    "expo-constants": "*",
+    "expo-location": "*",
+    "expo-task-manager": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "dependencies": {
+    "@hajiracm/tracking-core": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
+

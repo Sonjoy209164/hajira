@@ -1,0 +1,72 @@
+# @hajiracm/tracking-init
+
+Small Expo/React Native helper package that **initiates tracking**:
+
+- Checks/creates a `deviceId`
+- Requests required runtime permissions
+- Starts background tracking via `expo-task-manager` + `expo-location` (**Android foreground service notification included**)
+- Falls back to foreground `watchPositionAsync` on Expo Go (Android)
+- Queues points to `AsyncStorage` (**no SQLite / no DB**)
+
+This package does **not** upload to your backend. Your app can read/drain the queue and upload however you want.
+
+## Install
+
+```bash
+npm i @hajiracm/tracking-init @hajiracm/tracking-core
+```
+
+Peer deps (install in your app):
+
+```bash
+npx expo install expo-location expo-task-manager expo-constants
+npx expo install @react-native-async-storage/async-storage @react-native-community/netinfo
+```
+
+## Setup (required)
+
+Import the task once at app startup (side-effect import):
+
+```ts
+import "@hajiracm/tracking-init/trackingTask";
+```
+
+## Required permissions (Expo config)
+
+In your Expo app config (`app.json` / `app.config.js`), make sure Android permissions are declared:
+
+- `ACCESS_COARSE_LOCATION`, `ACCESS_FINE_LOCATION`
+- `ACCESS_BACKGROUND_LOCATION` (recommended for locked-screen tracking)
+- `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_LOCATION`
+- `POST_NOTIFICATIONS` (Android 13+)
+
+For iOS, set permission strings and enable background mode `location` (required for background updates).
+
+## Usage
+
+```ts
+import { startTracking, stopTracking, drainQueuedTrackingPoints } from "@hajiracm/tracking-init";
+
+await startTracking({ sessionId: "shift_123" });
+
+// ... later (e.g. when online)
+const points = await drainQueuedTrackingPoints({ sessionId: "shift_123", limit: 200 });
+// upload points yourself...
+
+await stopTracking();
+```
+
+## Expo Go vs Dev Build / Production
+
+- **Dev Build / Production**: background tracking works via `expo-task-manager` + `expo-location` (Android runs as a Foreground Service with a notification)
+- **Expo Go (Android)**: background task delivery is not reliable; this package falls back to a foreground watcher (works only while the app is open)
+
+## Demo app
+
+From this repo root, run:
+
+```bash
+bash scripts/create-tracking-init-demo.sh
+cd examples/tracking-init-demo
+npx expo start
+```
