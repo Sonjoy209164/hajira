@@ -1,7 +1,38 @@
 {
   "name": "@hajiracm/tracking-init",
-  "version": "0.1.0",
-  "description": "Expo/React Native tracking initiator (permissions + device id + foreground/background services) with an AsyncStorage queue (no SQLite)",
+  "version": "0.2.0",
+  "description": "Reliable Expo and React Native background GPS location tracking with offline AsyncStorage queue, health checks, recovery, permissions, and mock-location detection.",
+  "keywords": [
+    "expo",
+    "react-native",
+    "location",
+    "location-tracking",
+    "background-location",
+    "background-tracking",
+    "gps",
+    "gps-tracking",
+    "geolocation",
+    "expo-location",
+    "expo-task-manager",
+    "foreground-service",
+    "offline",
+    "async-storage",
+    "location-permission",
+    "tracking",
+    "tracking-sdk",
+    "mock-location",
+    "android",
+    "ios"
+  ],
+  "homepage": "https://github.com/Sonjoy209164/hajira#readme",
+  "bugs": {
+    "url": "https://github.com/Sonjoy209164/hajira/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sonjoy209164/hajira.git",
+    "directory": "packages/tracking-init"
+  },
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

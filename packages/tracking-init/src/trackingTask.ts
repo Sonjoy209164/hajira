@@ -15,11 +15,15 @@ TaskManager.defineTask(TRACKING_TASK_NAME, async ({ data, error }: any) => {
   const locations: any[] = payload?.locations ?? [];
   if (!locations.length) return;
 
-  // Record that Android delivered a background update (useful for debugging OEM restrictions).
-  await AsyncStorage.setItem(STORAGE_LAST_BG_DELIVERY_AT_KEY, String(Date.now())).catch(() => null);
-
   // Enqueue all delivered locations for the active session.
+  let queued = 0;
   for (const loc of locations) {
-    await enqueueTrackingPointForActiveSession(loc as any).catch(() => null);
+    const point = await enqueueTrackingPointForActiveSession(loc as any).catch(() => null);
+    if (point) queued += 1;
+  }
+
+  // A delivery is healthy only after at least one point is safely queued.
+  if (queued > 0) {
+    await AsyncStorage.setItem(STORAGE_LAST_BG_DELIVERY_AT_KEY, String(Date.now())).catch(() => null);
   }
 });

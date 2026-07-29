@@ -15,7 +15,12 @@ import {
 } from "./trackingConstants.js";
 import { enqueueTrackingPointForActiveSession } from "./queue.js";
 
-type TrackingStrategy = "BACKGROUND_TASK" | "FOREGROUND_WATCH";
+export type TrackingStrategy = "BACKGROUND_TASK" | "FOREGROUND_WATCH";
+
+export type TrackingCollectorOptions = {
+  timeIntervalMs: number;
+  distanceIntervalM: number;
+};
 
 export type TrackingPermissionResult =
   | { granted: true; warning?: string }
@@ -28,6 +33,7 @@ export type ActiveTrackingSession = {
   paused?: boolean;
   strategy?: TrackingStrategy;
   permissionWarning?: string;
+  collectorOptions?: TrackingCollectorOptions;
 };
 
 let foregroundWatchSubscription: Location.LocationSubscription | null = null;
@@ -190,13 +196,23 @@ export async function startTracking(params?: {
   if (!perm.granted) throw new Error(perm.reason);
 
   const existing = await getActiveSession();
-  if (existing && !existing.paused) return existing;
-
   const sessionId = params?.sessionId || existing?.sessionId || `sess_${Date.now()}`;
-  const timeIntervalMs = params?.timeIntervalMs ?? DEFAULT_TIME_INTERVAL_MS;
-  const distanceIntervalM = params?.distanceIntervalM ?? DEFAULT_DISTANCE_INTERVAL_M;
+  const timeIntervalMs =
+    params?.timeIntervalMs ?? existing?.collectorOptions?.timeIntervalMs ?? DEFAULT_TIME_INTERVAL_MS;
+  const distanceIntervalM =
+    params?.distanceIntervalM ??
+    existing?.collectorOptions?.distanceIntervalM ??
+    DEFAULT_DISTANCE_INTERVAL_M;
 
   const strategy: TrackingStrategy = isExpoGoAndroid() ? "FOREGROUND_WATCH" : "BACKGROUND_TASK";
+
+  if (existing && !existing.paused) {
+    const serviceRunning =
+      strategy === "FOREGROUND_WATCH"
+        ? foregroundWatchSubscription !== null
+        : await Location.hasStartedLocationUpdatesAsync(TRACKING_TASK_NAME).catch(() => false);
+    if (serviceRunning) return existing;
+  }
 
   const active: ActiveTrackingSession = {
     sessionId,
@@ -205,6 +221,7 @@ export async function startTracking(params?: {
     paused: false,
     strategy,
     permissionWarning: perm.warning,
+    collectorOptions: { timeIntervalMs, distanceIntervalM },
   };
 
   await saveActiveSession(active);
@@ -247,11 +264,16 @@ export async function resumeTracking(params?: { timeIntervalMs?: number; distanc
   const perm = await ensureTrackingPermissions();
   if (!perm.granted) throw new Error(perm.reason);
 
-  const timeIntervalMs = params?.timeIntervalMs ?? DEFAULT_TIME_INTERVAL_MS;
-  const distanceIntervalM = params?.distanceIntervalM ?? DEFAULT_DISTANCE_INTERVAL_M;
+  const timeIntervalMs =
+    params?.timeIntervalMs ?? active.collectorOptions?.timeIntervalMs ?? DEFAULT_TIME_INTERVAL_MS;
+  const distanceIntervalM =
+    params?.distanceIntervalM ??
+    active.collectorOptions?.distanceIntervalM ??
+    DEFAULT_DISTANCE_INTERVAL_M;
 
   active.paused = false;
   active.strategy = isExpoGoAndroid() ? "FOREGROUND_WATCH" : "BACKGROUND_TASK";
+  active.collectorOptions = { timeIntervalMs, distanceIntervalM };
   await saveActiveSession(active);
 
   if (active.strategy === "FOREGROUND_WATCH") {

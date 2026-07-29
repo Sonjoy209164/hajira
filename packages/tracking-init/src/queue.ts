@@ -3,7 +3,11 @@ import type { TrackingPointUpload } from "@hajiracm/tracking-core";
 import type { LocationObject } from "expo-location";
 
 import { isTrackingInitDebugLoggingEnabled } from "./debug.js";
-import { STORAGE_ACTIVE_SESSION_KEY, STORAGE_QUEUE_KEY_PREFIX } from "./trackingConstants.js";
+import {
+  STORAGE_ACTIVE_SESSION_KEY,
+  STORAGE_LAST_POINT_QUEUED_AT_KEY,
+  STORAGE_QUEUE_KEY_PREFIX,
+} from "./trackingConstants.js";
 
 export type QueuedTrackingPoint = TrackingPointUpload & {
   queuedAt: number;
@@ -48,11 +52,11 @@ export async function enqueueTrackingPoint(params: {
   deviceId: string;
   location: LocationObject;
   maxQueueSize?: number;
-}) {
+}): Promise<QueuedTrackingPoint | null> {
   const coords = params.location?.coords;
   const latitude = Number(coords?.latitude);
   const longitude = Number(coords?.longitude);
-  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
 
   const ts =
     typeof (params.location as any)?.timestamp === "number" ? (params.location as any).timestamp : Date.now();
@@ -88,6 +92,7 @@ export async function enqueueTrackingPoint(params: {
 
   const maxQueueSize = Math.max(10, Math.min(Number(params.maxQueueSize ?? 5000), 50_000));
 
+  let queued = false;
   await withWriteLock(async () => {
     const raw = await AsyncStorage.getItem(key(params.sessionId));
     let list: QueuedTrackingPoint[] = [];
@@ -106,13 +111,20 @@ export async function enqueueTrackingPoint(params: {
     }
 
     await AsyncStorage.setItem(key(params.sessionId), JSON.stringify(list));
+    queued = true;
   });
+  if (!queued) return null;
+  await AsyncStorage.setItem(STORAGE_LAST_POINT_QUEUED_AT_KEY, String(Date.now())).catch(() => null);
+  return point;
 }
 
-export async function enqueueTrackingPointForActiveSession(location: LocationObject, opts?: { maxQueueSize?: number }) {
+export async function enqueueTrackingPointForActiveSession(
+  location: LocationObject,
+  opts?: { maxQueueSize?: number },
+): Promise<QueuedTrackingPoint | null> {
   const session = await getActiveSession();
-  if (!session || session.paused) return;
-  await enqueueTrackingPoint({
+  if (!session || session.paused) return null;
+  return enqueueTrackingPoint({
     sessionId: session.sessionId,
     deviceId: session.deviceId,
     location,
@@ -153,4 +165,43 @@ export async function drainQueuedTrackingPoints(params: { sessionId: string; lim
   });
 
   return drained;
+}
+
+/**
+ * Removes only the acknowledged points. Prefer this over destructive draining
+ * when an upload or database write can fail after points have been read.
+ */
+export async function acknowledgeQueuedTrackingPoints(params: {
+  sessionId: string;
+  pointIds: string[];
+}): Promise<number> {
+  const ids = new Set(params.pointIds.filter(Boolean));
+  if (!ids.size) return 0;
+
+  let removed = 0;
+  await withWriteLock(async () => {
+    const all = await readQueuedTrackingPoints({ sessionId: params.sessionId });
+    const remaining = all.filter((point) => {
+      if (!ids.has(point.pointId)) return true;
+      removed += 1;
+      return false;
+    });
+    if (remaining.length) {
+      await AsyncStorage.setItem(key(params.sessionId), JSON.stringify(remaining));
+    } else {
+      await clearQueuedTrackingPoints({ sessionId: params.sessionId });
+    }
+  });
+  return removed;
+}
+
+/** Read a batch without removing it; acknowledge it after durable processing. */
+export async function peekQueuedTrackingPoints(params: {
+  sessionId: string;
+  limit?: number;
+}): Promise<QueuedTrackingPoint[]> {
+  const all = await readQueuedTrackingPoints({ sessionId: params.sessionId });
+  if (params.limit == null) return all;
+  const limit = Math.max(1, Math.min(Number(params.limit), 50_000));
+  return all.slice(0, limit);
 }

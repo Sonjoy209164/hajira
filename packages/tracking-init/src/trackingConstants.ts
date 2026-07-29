@@ -13,4 +13,4 @@ export const STORAGE_DEVICE_ID_KEY = "tracking.deviceId";
 export const STORAGE_ACTIVE_SESSION_KEY = "trackingInit.activeSession.v1";
 export const STORAGE_QUEUE_KEY_PREFIX = "trackingInit.queue.v1:";
 export const STORAGE_LAST_BG_DELIVERY_AT_KEY = "trackingInit.lastBackgroundDeliveryAt.v1";
-
+export const STORAGE_LAST_POINT_QUEUED_AT_KEY = "trackingInit.lastPointQueuedAt.v1";

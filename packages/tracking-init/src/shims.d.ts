@@ -24,6 +24,8 @@ declare module "expo-location" {
   export function stopLocationUpdatesAsync(...args: any[]): Promise<any>;
   export function hasStartedLocationUpdatesAsync(...args: any[]): Promise<boolean>;
   export function watchPositionAsync(...args: any[]): Promise<LocationSubscription>;
+  export function getCurrentPositionAsync(...args: any[]): Promise<LocationObject>;
+  export function getLastKnownPositionAsync(...args: any[]): Promise<LocationObject | null>;
 }
 
 declare module "expo-task-manager" {
@@ -35,4 +37,3 @@ declare module "react-native" {
   export const PermissionsAndroid: any;
   export const Platform: any;
 }
-
