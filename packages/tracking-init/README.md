@@ -1,4 +1,4 @@
-# @hajiracm/tracking-init
+# @hajiracm/all-time-tracking-expo
 
 Reliable background GPS location tracking for Expo and React Native. It combines
 foreground and background geolocation, offline location queues, Android
@@ -12,7 +12,7 @@ to a particular backend.
 
 ## Features
 
-`@hajiracm/tracking-init`:
+`@hajiracm/all-time-tracking-expo`:
 
 - Checks/creates a `deviceId`
 - Requests required runtime permissions
@@ -28,7 +28,7 @@ This package does **not** upload to your backend. Your app can read/drain the qu
 ## Install
 
 ```bash
-npm i @hajiracm/tracking-init @hajiracm/tracking-core
+npm i @hajiracm/all-time-tracking-expo @hajiracm/tracking-core
 ```
 
 Peer deps (install in your app):
@@ -43,7 +43,7 @@ npx expo install @react-native-async-storage/async-storage @react-native-communi
 Import the task once at app startup (side-effect import):
 
 ```ts
-import "@hajiracm/tracking-init/trackingTask";
+import "@hajiracm/all-time-tracking-expo/trackingTask";
 ```
 
 ## Required permissions (Expo config)
@@ -65,7 +65,7 @@ import {
   startTracking,
   stopTracking,
   drainQueuedTrackingPoints,
-} from "@hajiracm/tracking-init";
+} from "@hajiracm/all-time-tracking-expo";
 
 // Prints every collected point to the JS console:
 setTrackingInitDebugLogging(true);
@@ -88,7 +88,7 @@ peek first and acknowledge only after the points are stored or uploaded:
 import {
   acknowledgeQueuedTrackingPoints,
   peekQueuedTrackingPoints,
-} from "@hajiracm/tracking-init";
+} from "@hajiracm/all-time-tracking-expo";
 
 const points = await peekQueuedTrackingPoints({ sessionId: "shift_123", limit: 200 });
 await saveOrUpload(points);
@@ -101,7 +101,7 @@ await acknowledgeQueuedTrackingPoints({
 ### Health checks and recovery
 
 ```ts
-import { getTrackingHealth, recoverTracking } from "@hajiracm/tracking-init";
+import { getTrackingHealth, recoverTracking } from "@hajiracm/all-time-tracking-expo";
 
 const health = await getTrackingHealth({ staleAfterMs: 5 * 60_000 });
 
@@ -122,7 +122,7 @@ Call `ensureTrackingPermissions` first if the app has not already requested
 location permission.
 
 ```ts
-import { acquireGpsFix, ensureTrackingPermissions } from "@hajiracm/tracking-init";
+import { acquireGpsFix, ensureTrackingPermissions } from "@hajiracm/all-time-tracking-expo";
 
 await ensureTrackingPermissions();
 const result = await acquireGpsFix({

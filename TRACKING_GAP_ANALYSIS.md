@@ -4,7 +4,7 @@ Reviewed source: `/home/sonjoy-roy/shukhi/shukhee-fip`, with emphasis on the
 Expo application's tracking, GPS trail, sync, attendance GPS, diagnostics and
 watchdog flows.
 
-## Added to `@hajiracm/tracking-init`
+## Added to `@hajiracm/all-time-tracking-expo`
 
 | Shukhee capability | Previous package gap | Library implementation |
 | --- | --- | --- |

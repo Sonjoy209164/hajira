@@ -1,5 +1,5 @@
 {
-  "name": "@hajiracm/tracking-init",
+  "name": "@hajiracm/all-time-tracking-expo",
   "version": "0.2.0",
   "description": "Reliable Expo and React Native background GPS location tracking with offline AsyncStorage queue, health checks, recovery, permissions, and mock-location detection.",
   "keywords": [

@@ -6,7 +6,7 @@ This repo contains three npm packages:
 
 - `@hajiracm/tracking-core`: shared types + a tiny `fetch` API client
 - `@hajiracm/tracking-expo`: Expo/React Native implementation (permissions, background tasks, offline queue, upload)
-- `@hajiracm/tracking-init`: Expo/React Native “starter” that only initiates tracking + queues points in `AsyncStorage` (no SQLite / no upload)
+- `@hajiracm/all-time-tracking-expo`: Expo/React Native “starter” that only initiates tracking + queues points in `AsyncStorage` (no SQLite / no upload)
 
 For a quick local demo app, run: `bash scripts/create-tracking-init-demo.sh`
 
@@ -58,10 +58,10 @@ npx expo install @react-native-async-storage/async-storage @react-native-communi
 Init-only (no upload / no SQLite):
 
 ```bash
-npm i @hajiracm/tracking-init @hajiracm/tracking-core
+npm i @hajiracm/all-time-tracking-expo @hajiracm/tracking-core
 ```
 
-`@hajiracm/tracking-init` requires these peer deps in your app:
+`@hajiracm/all-time-tracking-expo` requires these peer deps in your app:
 
 ```bash
 npx expo install expo-location expo-task-manager expo-constants
@@ -70,7 +70,7 @@ npx expo install @react-native-async-storage/async-storage @react-native-communi
 
 ## Backend Requirement
 
-`@hajiracm/tracking-expo` **uploads to your backend**. You must provide a `baseUrl` for API calls. (`@hajiracm/tracking-init` does not upload; it only queues points.)
+`@hajiracm/tracking-expo` **uploads to your backend**. You must provide a `baseUrl` for API calls. (`@hajiracm/all-time-tracking-expo` does not upload; it only queues points.)
 
 You can configure it using environment variables (simple) or in code (more flexible).
 

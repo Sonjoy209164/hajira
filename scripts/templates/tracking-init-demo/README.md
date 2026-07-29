@@ -1,6 +1,6 @@
 # tracking-init-demo
 
-Small Expo app showing how to use `@hajiracm/tracking-init` to:
+Small Expo app showing how to use `@hajiracm/all-time-tracking-expo` to:
 
 - request permissions
 - start background/foreground location tracking
@@ -31,13 +31,13 @@ Note: This demo compiles the local workspace packages in `postinstall` (runs `np
 Side-effect import at startup (required so Android can deliver background updates):
 
 ```ts
-import "@hajiracm/tracking-init/trackingTask";
+import "@hajiracm/all-time-tracking-expo/trackingTask";
 ```
 
 Enable continuous console logging (prints on every collected point):
 
 ```ts
-import { setTrackingInitDebugLogging } from "@hajiracm/tracking-init";
+import { setTrackingInitDebugLogging } from "@hajiracm/all-time-tracking-expo";
 
 setTrackingInitDebugLogging(true);
 ```
@@ -45,7 +45,7 @@ setTrackingInitDebugLogging(true);
 Start/stop tracking:
 
 ```ts
-import { startTracking, stopTracking } from "@hajiracm/tracking-init";
+import { startTracking, stopTracking } from "@hajiracm/all-time-tracking-expo";
 
 await startTracking({ sessionId: "demo" });
 // ...later
@@ -55,7 +55,7 @@ await stopTracking();
 Read/drain queued points (you can upload these yourself):
 
 ```ts
-import { drainQueuedTrackingPoints } from "@hajiracm/tracking-init";
+import { drainQueuedTrackingPoints } from "@hajiracm/all-time-tracking-expo";
 
 const points = await drainQueuedTrackingPoints({ sessionId: "demo", limit: 50 });
 console.log("drained", points.length);
@@ -79,6 +79,6 @@ This demo writes required permissions into `app.json`.
 
 This app installs the package via:
 
-- `@hajiracm/tracking-init`: `file:../../packages/tracking-init`
+- `@hajiracm/all-time-tracking-expo`: `file:../../packages/tracking-init`
 
 When using local workspace packages like this, Metro needs `metro.config.js` (included) so it can watch and resolve symlinked packages.

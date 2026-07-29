@@ -1,4 +1,4 @@
-import "@hajiracm/tracking-init/trackingTask";
+import "@hajiracm/all-time-tracking-expo/trackingTask";
 
 import NetInfo from "@react-native-community/netinfo";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -17,7 +17,7 @@ import {
   startTracking,
   stopTracking,
   type QueuedTrackingPoint,
-} from "@hajiracm/tracking-init";
+} from "@hajiracm/all-time-tracking-expo";
 
 // Print every collected point to the JS console
 setTrackingInitDebugLogging(true);
