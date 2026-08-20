@@ -1,0 +1,30 @@
+{
+  "name": "jamai-tracker",
+  "private": true,
+  "version": "0.1.0",
+  "main": "expo/AppEntry.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@hajiracm/tracking-core": "^0.1.0",
+    "@hajiracm/tracking-expo": "^0.1.0",
+    "@react-native-async-storage/async-storage": "*",
+    "@react-native-community/netinfo": "*",
+    "expo": "*",
+    "expo-constants": "*",
+    "expo-location": "*",
+    "expo-sqlite": "*",
+    "expo-task-manager": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-maps": "*"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10"
+  }
+}

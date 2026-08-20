@@ -7,6 +7,11 @@ This repo contains two npm packages:
 - `@hajiracm/tracking-core`: shared types + a tiny `fetch` API client
 - `@hajiracm/tracking-expo`: Expo/React Native implementation (permissions, background tasks, offline queue, upload)
 
+Demo projects in this repo:
+
+- `apps/jamai-api`: local demo backend (JSON storage)
+- `apps/jamai-tracker`: Expo demo app (Share + View)
+
 ## What It’s For (Use Cases)
 
 Typical use cases:
@@ -192,4 +197,3 @@ Request/response shapes are defined in `@hajiracm/tracking-core` types:
 ## License
 
 MIT
-

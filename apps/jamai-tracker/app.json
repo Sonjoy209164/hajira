@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "JamaiTracker",
+    "slug": "jamai-tracker",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "jamaitracker",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow JamaiTracker to access your location so you can share it with people you choose.",
+          "locationWhenInUsePermission": "Allow JamaiTracker to access your location while you use the app."
+        }
+      ]
+    ],
+    "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location"
+        ]
+      }
+    },
+    "android": {
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION",
+        "POST_NOTIFICATIONS"
+      ]
+    }
+  }
+}
